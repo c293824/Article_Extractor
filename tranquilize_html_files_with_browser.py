@@ -11,8 +11,8 @@ from selenium.webdriver.chrome.options import Options
 chromedriver_path = "assets/chromedrivers/"
 tranquilize_js_path = "assets/tranquilize.js"
 webpage_html_files_path = re.sub(r'\\ ', ' ',
-                                 '/Volumes/GoogleDrive/My\ Drive/Website\ Copies\ for\ testing\ nltk\ htmlcorpusmaker\ as\ per\ Text\ Analysis\ With\ Python/www.psychologytoday.com/us/conditions/')
-output_text_files_path = "output_text_files/"
+                                 'PATH_TO_FOLDER_OF_HTML_FILES/')
+output_text_files_path = "PATH_TO_OUTPUT_FOLDER/"
 
 exclude_nonparagraph_nonheading_text = False
 
