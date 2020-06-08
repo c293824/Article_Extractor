@@ -5,8 +5,8 @@ import sys
 import assets.parse_html as parse_html
 
 webpage_html_files_path = re.sub(r'\\ ', ' ',
-                                 '/Volumes/GoogleDrive/My\ Drive/Website\ Copies\ for\ testing\ nltk\ htmlcorpusmaker\ as\ per\ Text\ Analysis\ With\ Python/www.verywellmind.com/New\ Folder\ With\ 4\ Items/')
-output_text_files_path = "output_text_files/"
+                                 'PATH_TO_FOLDER_OF_HTML_FILES/')
+output_text_files_path = "PATH_TO_OUTPUY_FOLDER_OF_HTML_FILES/"
 
 exclude_nonparagraph_nonheading_text = True
 
