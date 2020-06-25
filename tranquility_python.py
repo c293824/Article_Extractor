@@ -2,7 +2,6 @@ import os
 import sys
 from html.parser import HTMLParser
 
-
 """BEGIN HTML PARSING UTILITIES"""
 
 # Tags to include in output text file
