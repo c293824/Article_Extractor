@@ -6,12 +6,29 @@ from html.parser import HTMLParser
 """BEGIN HTML PARSING UTILITIES"""
 
 # Tags to include in output text file
-text_containing_tags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li']
+text_containing_tags = ["p", "h1", "h2", "h3", "h4", "h5", "h6", "li"]
 
 # Tags to definitely remove
-unnecessary_tags = ["style", "link", "meta", "script", "noscript", "iframe",
-                    "select", "dd", "input", "textarea", "header", "footer",
-                    "nav", "form", "button", "picture", "figure", "svg"]
+unnecessary_tags = [
+    "style",
+    "link",
+    "meta",
+    "script",
+    "noscript",
+    "iframe",
+    "select",
+    "dd",
+    "input",
+    "textarea",
+    "header",
+    "footer",
+    "nav",
+    "form",
+    "button",
+    "picture",
+    "figure",
+    "svg",
+]
 
 first_heading_reached = False
 
@@ -33,7 +50,6 @@ class Tag:
 
 # Parses html into nested objects in preparation for tranquilizing
 class Parser(HTMLParser):
-
     def __init__(self):
         HTMLParser.__init__(self)
         self.parent_queue = []
@@ -50,12 +66,15 @@ class Parser(HTMLParser):
 
         self.parent_queue.append(new_tag)
 
-        if self.first_heading is None and text_containing_tags.count(tag) > 0 and tag[0] == 'h':
+        if (
+            self.first_heading is None
+            and text_containing_tags.count(tag) > 0
+            and tag[0] == "h"
+        ):
             self.first_heading = new_tag
 
     def handle_data(self, data):
-        self.parent_queue[-1].children.append(
-            Text(data, self.parent_queue[-1]))
+        self.parent_queue[-1].children.append(Text(data, self.parent_queue[-1]))
 
     def handle_endtag(self, tag):
         self.parent_queue.pop()
@@ -99,7 +118,7 @@ def group_text(element):
 # Search an element that has 'author' as a value of its attributes
 def find_author(element):
     for _, val in element.attrs:
-        if val is not None and val.find('author') != -1:
+        if val is not None and val.find("author") != -1:
             return element
 
     for child in element.children:
@@ -112,7 +131,7 @@ def find_author(element):
 
 
 def find_title(element):
-    if element.id == 'title':
+    if element.id == "title":
         return element
 
     for child in element.children:
@@ -135,13 +154,17 @@ def write_body(element, first_heading, texts=None):
 
     if isinstance(element, Text):
         if first_heading_reached:
-            if not element.data.isspace() and unnecessary_tags.count(element.parent.id) == 0:
+            if (
+                not element.data.isspace()
+                and unnecessary_tags.count(element.parent.id) == 0
+            ):
                 texts.append("<other>\n" + element.data + "\n</other>")
     else:
         if element.text != "":
             if first_heading_reached:
-                texts.append("<" + element.id + ">\n" +
-                             element.text + "\n</" + element.id + ">")
+                texts.append(
+                    "<" + element.id + ">\n" + element.text + "\n</" + element.id + ">"
+                )
         else:
             for child in element.children:
                 write_body(child, first_heading, texts)
@@ -161,8 +184,9 @@ def write_body_ph_only(element, first_heading, texts=None):
     if isinstance(element, Tag):
         if element.text != "":
             if first_heading_reached:
-                texts.append("<" + element.id + ">\n" +
-                             element.text + "\n</" + element.id + ">")
+                texts.append(
+                    "<" + element.id + ">\n" + element.text + "\n</" + element.id + ">"
+                )
         else:
             for child in element.children:
                 write_body_ph_only(child, first_heading, texts)
@@ -228,7 +252,7 @@ def build_txt(source, url, exclude_non_text_containing_tags):
     for text in body_texts:
         txt += text + "\n\n"
 
-    return {'title': title, 'text': txt[0:-2]}
+    return {"title": title, "text": txt[0:-2]}
 
 
 """END HTML PARSING UTILITIES"""
@@ -239,7 +263,9 @@ webpage_html_files_path = "webpage_html_files/"
 output_text_files_path = "output_text_files/"
 
 
-def set_default_path(webpage_html_files=webpage_html_files_path, output_text_files=output_text_files_path):
+def set_default_path(
+    webpage_html_files=webpage_html_files_path, output_text_files=output_text_files_path
+):
     global webpage_html_files_path
     global output_text_files_path
     webpage_html_files_path = webpage_html_files
@@ -249,16 +275,28 @@ def set_default_path(webpage_html_files=webpage_html_files_path, output_text_fil
 # Read html files, return in list
 def import_html_files(dir_path=webpage_html_files_path):
     sources = []
-    file_names = [f for f in os.listdir(
-        dir_path) if os.path.isfile(os.path.join(dir_path, f))]
+    file_names = [
+        f for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))
+    ]
     for file_name in file_names:
-        sources.append([file_name, file_name[0:file_name.find('.')], open(
-            dir_path + file_name, "rb").read().decode(sys.stdin.encoding, errors='replace')])
+        sources.append(
+            [
+                file_name,
+                file_name[0 : file_name.find(".")],
+                open(dir_path + file_name, "rb")
+                .read()
+                .decode(sys.stdin.encoding, errors="replace"),
+            ]
+        )
     return sources
 
 
 # Tranquilize html files with parser
-def tranquilize_files(exclude_non_text_containing_tags=True, dir_path=webpage_html_files_path, output_path=output_text_files_path):
+def tranquilize_files(
+    exclude_non_text_containing_tags=True,
+    dir_path=webpage_html_files_path,
+    output_path=output_text_files_path,
+):
     sources = import_html_files(dir_path)
 
     for url, file_name, source in sources:
@@ -266,6 +304,5 @@ def tranquilize_files(exclude_non_text_containing_tags=True, dir_path=webpage_ht
         txt = build_txt(source, url, exclude_non_text_containing_tags)
 
         out_file = open(output_path + file_name + ".txt", "w")
-        out_file.write(txt['text'].encode(
-            sys.stdout.encoding, errors='replace'))
+        out_file.write(txt["text"].encode(sys.stdout.encoding, errors="replace"))
         out_file.close()
