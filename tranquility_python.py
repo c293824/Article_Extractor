@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 from html.parser import HTMLParser
 
 
@@ -9,8 +10,8 @@ text_containing_tags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li']
 
 # Tags to definitely remove
 unnecessary_tags = ["style", "link", "meta", "script", "noscript", "iframe",
-                   "select", "dd", "input", "textarea", "header", "footer",
-                   "nav", "form", "button", "picture", "figure", "svg"]
+                    "select", "dd", "input", "textarea", "header", "footer",
+                    "nav", "form", "button", "picture", "figure", "svg"]
 
 first_heading_reached = False
 
@@ -53,7 +54,8 @@ class Parser(HTMLParser):
             self.first_heading = new_tag
 
     def handle_data(self, data):
-        self.parent_queue[-1].children.append(Text(data, self.parent_queue[-1]))
+        self.parent_queue[-1].children.append(
+            Text(data, self.parent_queue[-1]))
 
     def handle_endtag(self, tag):
         self.parent_queue.pop()
@@ -138,7 +140,8 @@ def write_body(element, first_heading, texts=None):
     else:
         if element.text != "":
             if first_heading_reached:
-                texts.append("<" + element.id + ">\n" + element.text + "\n</" + element.id + ">")
+                texts.append("<" + element.id + ">\n" +
+                             element.text + "\n</" + element.id + ">")
         else:
             for child in element.children:
                 write_body(child, first_heading, texts)
@@ -158,7 +161,8 @@ def write_body_ph_only(element, first_heading, texts=None):
     if isinstance(element, Tag):
         if element.text != "":
             if first_heading_reached:
-                texts.append("<" + element.id + ">\n" + element.text + "\n</" + element.id + ">")
+                texts.append("<" + element.id + ">\n" +
+                             element.text + "\n</" + element.id + ">")
         else:
             for child in element.children:
                 write_body_ph_only(child, first_heading, texts)
@@ -245,9 +249,11 @@ def set_default_path(webpage_html_files=webpage_html_files_path, output_text_fil
 # Read html files, return in list
 def import_html_files(dir_path=webpage_html_files_path):
     sources = []
-    file_names = [f for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))]
+    file_names = [f for f in os.listdir(
+        dir_path) if os.path.isfile(os.path.join(dir_path, f))]
     for file_name in file_names:
-        sources.append([file_name, file_name[0:file_name.find('.')], open(dir_path + file_name, "rb").read().decode(sys.stdin.encoding, errors='replace')])
+        sources.append([file_name, file_name[0:file_name.find('.')], open(
+            dir_path + file_name, "rb").read().decode(sys.stdin.encoding, errors='replace')])
     return sources
 
 
@@ -260,5 +266,6 @@ def tranquilize_files(exclude_non_text_containing_tags=True, dir_path=webpage_ht
         txt = build_txt(source, url, exclude_non_text_containing_tags)
 
         out_file = open(output_path + file_name + ".txt", "w")
-        out_file.write(txt['text'].encode(sys.stdout.encoding, errors='replace'))
+        out_file.write(txt['text'].encode(
+            sys.stdout.encoding, errors='replace'))
         out_file.close()
