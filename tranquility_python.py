@@ -96,7 +96,7 @@ def group_text(element):
 
 # Search an element that has 'author' as a value of its attributes
 def find_author(element):
-    for key, val in element.attrs:
+    for _, val in element.attrs:
         if val is not None and val.find('author') != -1:
             return element
 
